@@ -1,13 +1,14 @@
 import React, { ChangeEvent, FormEvent } from 'react';
-import '../styles/app.css';
 import { AppBar, Button, Grid, TextField, Typography } from '@mui/material';
 import theme from '../styles/theme';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const userEmail = 'test@invyo.io';
   const userPassword = 'test123@';
+  const navigate = useNavigate();
 
   const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -21,6 +22,7 @@ const LoginPage = () => {
     event.preventDefault();
     if (email === userEmail && password === userPassword) {
       alert('log in');
+      navigate('/my-tasks');
     } else if (email === userEmail && password !== userPassword) {
       alert('wrong password');
     } else if (email !== userEmail && password === userPassword) {
@@ -37,10 +39,7 @@ const LoginPage = () => {
         height: '100vh',
       }}
     >
-      <AppBar
-        className="login-info-bar"
-        sx={{ background: theme.palette.primary.main }}
-      >
+      <AppBar sx={{ background: theme.palette.primary.main }}>
         <Grid
           container
           direction="row"
@@ -57,7 +56,6 @@ const LoginPage = () => {
         </Grid>
       </AppBar>
       <Grid
-        className="login-container"
         color="primary"
         width={'100%'}
         sx={{ background: theme.palette.primary.light, padding: '1rem' }}
@@ -65,12 +63,11 @@ const LoginPage = () => {
         margin={'0'}
         paddingTop={'6rem'}
       >
-        <Grid className="info-Grid">
-          <Grid className="login-info-container">
-            <Grid className="remarked-info-container" paddingBottom={'2rem'}>
+        <Grid>
+          <Grid>
+            <Grid paddingBottom={'2rem'}>
               <Typography variant="h5">
                 <strong
-                  className="info-remarked"
                   style={{
                     background: theme.palette.primary.main,
                   }}
@@ -80,7 +77,6 @@ const LoginPage = () => {
               </Typography>
               <Typography variant="h5">
                 <strong
-                  className="info-remarked"
                   style={{
                     background: theme.palette.primary.main,
                   }}
@@ -90,7 +86,6 @@ const LoginPage = () => {
               </Typography>
               <Typography variant="h5">
                 <strong
-                  className="info-remarked"
                   style={{
                     background: theme.palette.primary.main,
                   }}
@@ -105,7 +100,7 @@ const LoginPage = () => {
             </Typography>
           </Grid>
         </Grid>
-        <Grid className="login-form-container" paddingTop={'5rem'}>
+        <Grid paddingTop={'5rem'}>
           <form onSubmit={handleSubmit}>
             <TextField
               label="Email"
