@@ -5,7 +5,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import '../../styles/navBar.css';
 import theme from '../../styles/theme';
 
-export default function TemporaryDrawer() {
+function NavBar() {
   const [state, setState] = React.useState(false);
   const toggleDrawer = () => setState(!state);
   const list: string[] = ['Home', 'Login', 'Personal Data'];
@@ -41,3 +41,5 @@ export default function TemporaryDrawer() {
     </AppBar>
   );
 }
+
+export default NavBar;
