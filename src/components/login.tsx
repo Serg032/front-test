@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FormEvent } from 'react';
+import '../styles/app.css';
 import { AppBar, Button, Grid, TextField, Typography } from '@mui/material';
 import theme from '../styles/theme';
-import '../styles/login.css';
 
 const LoginPage = () => {
   const [email, setEmail] = React.useState('');
@@ -31,26 +31,43 @@ const LoginPage = () => {
   };
 
   return (
-    <>
+    <Grid
+      sx={{
+        background: theme.palette.primary.light,
+        height: '100vh',
+      }}
+    >
       <AppBar
         className="login-info-bar"
         sx={{ background: theme.palette.primary.main }}
       >
-        <Typography sx={{ padding: '1rem' }}>
-          {'invyo'.toUpperCase()}
-        </Typography>
-        <Typography>Log in</Typography>
+        <Grid
+          container
+          direction="row"
+          alignItems="center"
+          justifyContent={'space-between'}
+          padding={'1rem'}
+        >
+          <Grid>
+            <Typography>{'invyo'.toUpperCase()}</Typography>
+          </Grid>
+          <Grid>
+            <Typography>Log in</Typography>
+          </Grid>
+        </Grid>
       </AppBar>
       <Grid
         className="login-container"
         color="primary"
-        height={'100vh'}
         width={'100%'}
         sx={{ background: theme.palette.primary.light, padding: '1rem' }}
+        padding={'0'}
+        margin={'0'}
+        paddingTop={'6rem'}
       >
         <Grid className="info-Grid">
           <Grid className="login-info-container">
-            <Grid className="remarked-info-container">
+            <Grid className="remarked-info-container" paddingBottom={'2rem'}>
               <Typography variant="h5">
                 <strong
                   className="info-remarked"
@@ -88,7 +105,7 @@ const LoginPage = () => {
             </Typography>
           </Grid>
         </Grid>
-        <Grid className="login-form-container">
+        <Grid className="login-form-container" paddingTop={'5rem'}>
           <form onSubmit={handleSubmit}>
             <TextField
               label="Email"
@@ -120,7 +137,7 @@ const LoginPage = () => {
           </form>
         </Grid>
       </Grid>
-    </>
+    </Grid>
   );
 };
 
