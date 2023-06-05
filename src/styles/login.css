@@ -26,6 +26,7 @@
 }
 .login-first-texts-container {
     display: flex;
+    flex-direction: column;
     width: 100%;
     gap: 1rem;
 }
@@ -54,12 +55,57 @@
 .pilars-img {
     width: 70px;
 }
+.form-text {
+    display: none;
+}
 @media screen and (min-height: 800px) {
     .login-first-section-container {
-        height: 600px;
+        height: 500px;
         gap: 3rem;
     }
     .login-first-texts-container {
         gap: 3rem;
+    }
+}
+@media screen and (min-width: 768px) {
+    .login-container {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+    }
+    .appbar-main-container {
+        display: none;
+    }
+    .login-main-content-container {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+    }
+    .login-first-section-container {
+        gap: 4rem;
+        width: 50%;
+        background-color: var(--color-primary);
+        border-radius: 10px;
+        padding: 1rem;
+    }
+    .strong-typo {
+        background-color: var(--color-secondary);
+        color: var(--color-primary);
+    }
+    .login-form-container {
+        width: 50%;
+    }
+    .form-text {
+        display: block;
+    }
+    .login-leading-text {
+        color: var(--color-secondary);
     }
 }

@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FormEvent } from 'react';
 import '../styles/app.css';
-import { AppBar, Button, Grid, TextField, Typography } from '@mui/material';
+import { AppBar, Button, TextField, Typography } from '@mui/material';
 import theme from '../styles/theme';
 import { useNavigate } from 'react-router-dom';
 import '../styles/login.css';
@@ -79,27 +79,24 @@ const LoginPage = (props: Props) => {
   };
 
   return (
-    <Grid className="login-container">
-      <Grid
-        className="appbar-main-container"
-        container
-        display={{ sm: 'none', md: 'none' }}>
+    <div className="login-container">
+      <div className="appbar-main-container">
         <AppBar sx={{ background: theme.palette.primary.main }}>
-          <Grid container className="app-bar-login-container">
-            <Grid>
+          <div className="app-bar-login-container">
+            <div>
               <Typography>{'invyo'.toUpperCase()}</Typography>
-            </Grid>
-            <Grid>
+            </div>
+            <div>
               <Typography>Log in</Typography>
-            </Grid>
-          </Grid>
+            </div>
+          </div>
         </AppBar>
-      </Grid>
-      <Grid container className="login-main-content-container">
-        <Grid container className="login-first-section-container">
-          <Grid container className="login-first-texts-container">
-            <Grid className="text-pilars-container">
-              <Grid container className="strong-typo-container">
+      </div>
+      <div className="login-main-content-container">
+        <div className="login-first-section-container">
+          <div className="login-first-texts-container">
+            <div className="text-pilars-container">
+              <div className="strong-typo-container">
                 <Typography variant="h5">
                   <strong className="strong-typo">The best ally</strong>
                 </Typography>
@@ -109,23 +106,23 @@ const LoginPage = (props: Props) => {
                 <Typography variant="h5">
                   <strong className="strong-typo">your data</strong>
                 </Typography>
-              </Grid>
-              <Grid className="pilar-img-container">
+              </div>
+              <div className="pilar-img-container">
                 <img
                   className="pilars-img"
                   src={props.pilars}
                   alt="three-pilars"
                 />
-              </Grid>
-            </Grid>
-            <Grid>
-              <Typography textAlign={'center'}>
+              </div>
+            </div>
+            <div>
+              <Typography className='login-leading-text' textAlign={'center'}>
                 INVYO is a leading provider of technological solutions,
                 specialized in data processing and analysis.
               </Typography>
-            </Grid>
-          </Grid>
-          <Grid>
+            </div>
+          </div>
+          <div>
             {images.map((image, i) => (
               <img
                 key={i}
@@ -138,9 +135,12 @@ const LoginPage = (props: Props) => {
                 }}
               />
             ))}
-          </Grid>
-        </Grid>
-        <Grid container className="login-form-container">
+          </div>
+        </div>
+        <div className="login-form-container">
+          <Typography className='form-text'>
+            If you have an account you can access to INVYO utilies.
+          </Typography>
           <form onSubmit={handleSubmit}>
             <TextField
               label="Email"
@@ -167,9 +167,9 @@ const LoginPage = (props: Props) => {
               <Typography>Log In</Typography>
             </Button>
           </form>
-        </Grid>
-      </Grid>
-    </Grid>
+        </div>
+      </div>
+    </div>
   );
 };
 
