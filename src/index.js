@@ -7,6 +7,7 @@ import maddyness from './assets/maddyness.jpeg'
 import bfm from './assets/bfm.jpeg'
 import echos from './assets/echos.jpeg'
 import tech from './assets/tech.jpeg'
+import threePilars from './assets/3-pillar.png'
 
 const router = createBrowserRouter([
   {path: '/', element: <Navigate to={'/login'}/>},
@@ -14,7 +15,8 @@ const router = createBrowserRouter([
     maddynessImg={maddyness} 
     bfmImg={bfm} 
     echosImg={echos}
-    techImg={tech}/>},
+    techImg={tech}
+    pilars={threePilars}/>},
   {path: 'todo', element: <MyTasks/>}
 ])
 

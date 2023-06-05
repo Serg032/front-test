@@ -3,12 +3,14 @@ import '../styles/app.css';
 import { AppBar, Button, Grid, TextField, Typography } from '@mui/material';
 import theme from '../styles/theme';
 import { useNavigate } from 'react-router-dom';
+import '../styles/login.css';
 
 interface Props {
   maddynessImg: string;
   bfmImg: string;
   echosImg: string;
   techImg: string;
+  pilars: string;
 }
 interface Image {
   imgUrl: string;
@@ -77,19 +79,13 @@ const LoginPage = (props: Props) => {
   };
 
   return (
-    <Grid
-      sx={{
-        background: theme.palette.primary.light,
-        height: '100vh',
-      }}>
-      <Grid container display={{ sm: 'none', md: 'none' }}>
+    <Grid className="login-container">
+      <Grid
+        className="appbar-main-container"
+        container
+        display={{ sm: 'none', md: 'none' }}>
         <AppBar sx={{ background: theme.palette.primary.main }}>
-          <Grid
-            container
-            direction="row"
-            alignItems="center"
-            justifyContent={'space-between'}
-            padding={'1rem'}>
+          <Grid container className="app-bar-login-container">
             <Grid>
               <Typography>{'invyo'.toUpperCase()}</Typography>
             </Grid>
@@ -99,85 +95,52 @@ const LoginPage = (props: Props) => {
           </Grid>
         </AppBar>
       </Grid>
-
-      <Grid
-        container
-        color="primary"
-        width={'100%'}
-        height={'100%'}
-        sx={{ background: theme.palette.primary.light, padding: '1rem' }}
-        padding={'0'}
-        margin={'0'}
-        paddingTop={'5rem'}
-        display={'flex'}
-        direction={'column'}
-        alignItems={'center'}
-        justifyContent={'space-between'}>
-        <Grid>
-          <Grid>
-            <Grid
-              container
-              paddingBottom={'2rem'}
-              direction={'column'}
-              gap={'0.7rem'}>
-              <Typography variant="h5">
-                <strong
-                  style={{
-                    background: theme.palette.primary.main,
-                    padding: '0.3rem',
-                    borderRadius: '5px',
-                  }}>
-                  The best ally
-                </strong>
-              </Typography>
-              <Typography variant="h5">
-                <strong
-                  style={{
-                    background: theme.palette.primary.main,
-                    padding: '0.3rem',
-                    borderRadius: '5px',
-                  }}>
-                  in managing
-                </strong>
-              </Typography>
-              <Typography variant="h5">
-                <strong
-                  style={{
-                    background: theme.palette.primary.main,
-                    padding: '0.3rem',
-                    borderRadius: '5px',
-                  }}>
-                  your data
-                </strong>
+      <Grid container className="login-main-content-container">
+        <Grid container className="login-first-section-container">
+          <Grid container className="login-first-texts-container">
+            <Grid className="text-pilars-container">
+              <Grid container className="strong-typo-container">
+                <Typography variant="h5">
+                  <strong className="strong-typo">The best ally</strong>
+                </Typography>
+                <Typography variant="h5">
+                  <strong className="strong-typo">in managing</strong>
+                </Typography>
+                <Typography variant="h5">
+                  <strong className="strong-typo">your data</strong>
+                </Typography>
+              </Grid>
+              <Grid className="pilar-img-container">
+                <img
+                  className="pilars-img"
+                  src={props.pilars}
+                  alt="three-pilars"
+                />
+              </Grid>
+            </Grid>
+            <Grid>
+              <Typography textAlign={'center'}>
+                INVYO is a leading provider of technological solutions,
+                specialized in data processing and analysis.
               </Typography>
             </Grid>
-            <Typography>
-              INVYO is a leading provider of technological solutions,
-              specialized in data processing and analysis.
-            </Typography>
+          </Grid>
+          <Grid>
+            {images.map((image, i) => (
+              <img
+                key={i}
+                src={image.imgUrl}
+                alt={`${image.description}-image`}
+                style={{
+                  display: i === currentIndex ? 'block' : 'none',
+                  width: '250px',
+                  borderRadius: '15px',
+                }}
+              />
+            ))}
           </Grid>
         </Grid>
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          {images.map((image, i) => (
-            <img
-              key={i}
-              src={image.imgUrl}
-              alt={`${image.description}-image`}
-              style={{
-                display: i === currentIndex ? 'block' : 'none',
-                width: '250px',
-                borderRadius: '15px',
-              }}
-            />
-          ))}
-        </Grid>
-        <Grid>
+        <Grid container className="login-form-container">
           <form onSubmit={handleSubmit}>
             <TextField
               label="Email"
@@ -201,9 +164,7 @@ const LoginPage = (props: Props) => {
               type="submit"
               variant="contained"
               sx={{ background: theme.palette.primary.main }}>
-              <Typography sx={{ color: theme.palette.primary.light }}>
-                Log In
-              </Typography>
+              <Typography>Log In</Typography>
             </Button>
           </form>
         </Grid>
