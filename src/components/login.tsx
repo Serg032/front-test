@@ -83,7 +83,7 @@ const LoginPage = (props: Props) => {
         height: '100vh',
       }}
     >
-      <Grid container display={{ md: 'none' }}>
+      <Grid container display={{ sm: 'none', md: 'none' }}>
         <AppBar sx={{ background: theme.palette.primary.main }}>
           <Grid
             container
