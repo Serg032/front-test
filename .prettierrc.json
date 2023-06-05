@@ -5,6 +5,7 @@
     "printWidth": 80,
     "bracketSpacing": true,
     "arrayIndentation": "auto",
-    "trailingComma": "all"
+    "trailingComma": "all",
+    "jsxBracketSameLine": true
   }
   

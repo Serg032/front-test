@@ -15,7 +15,7 @@ const router = createBrowserRouter([
     bfmImg={bfm} 
     echosImg={echos}
     techImg={tech}/>},
-  {path: 'my-tasks', element: <MyTasks/>}
+  {path: 'todo', element: <MyTasks/>}
 ])
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

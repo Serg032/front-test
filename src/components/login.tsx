@@ -18,8 +18,8 @@ interface Image {
 const LoginPage = (props: Props) => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const userEmail = 'test@invyo.io';
-  const userPassword = 'test123@';
+  const userEmail = process.env.REACT_APP_USEREMAIL;
+  const userPassword = process.env.REACT_APP_PASSWORD;
   const navigate = useNavigate();
   const interval = 2500;
 
@@ -65,8 +65,8 @@ const LoginPage = (props: Props) => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (email === userEmail && password === userPassword) {
-      alert('log in');
-      navigate('/my-tasks');
+      localStorage.setItem('auth', 'true');
+      navigate('/todo');
     } else if (email === userEmail && password !== userPassword) {
       alert('wrong password');
     } else if (email !== userEmail && password === userPassword) {
@@ -81,8 +81,7 @@ const LoginPage = (props: Props) => {
       sx={{
         background: theme.palette.primary.light,
         height: '100vh',
-      }}
-    >
+      }}>
       <Grid container display={{ sm: 'none', md: 'none' }}>
         <AppBar sx={{ background: theme.palette.primary.main }}>
           <Grid
@@ -90,8 +89,7 @@ const LoginPage = (props: Props) => {
             direction="row"
             alignItems="center"
             justifyContent={'space-between'}
-            padding={'1rem'}
-          >
+            padding={'1rem'}>
             <Grid>
               <Typography>{'invyo'.toUpperCase()}</Typography>
             </Grid>
@@ -103,6 +101,7 @@ const LoginPage = (props: Props) => {
       </Grid>
 
       <Grid
+        container
         color="primary"
         width={'100%'}
         height={'100%'}
@@ -113,24 +112,21 @@ const LoginPage = (props: Props) => {
         display={'flex'}
         direction={'column'}
         alignItems={'center'}
-        justifyContent={'space-between'}
-      >
+        justifyContent={'space-between'}>
         <Grid>
           <Grid>
             <Grid
               container
               paddingBottom={'2rem'}
               direction={'column'}
-              gap={'0.7rem'}
-            >
+              gap={'0.7rem'}>
               <Typography variant="h5">
                 <strong
                   style={{
                     background: theme.palette.primary.main,
                     padding: '0.3rem',
                     borderRadius: '5px',
-                  }}
-                >
+                  }}>
                   The best ally
                 </strong>
               </Typography>
@@ -140,8 +136,7 @@ const LoginPage = (props: Props) => {
                     background: theme.palette.primary.main,
                     padding: '0.3rem',
                     borderRadius: '5px',
-                  }}
-                >
+                  }}>
                   in managing
                 </strong>
               </Typography>
@@ -151,8 +146,7 @@ const LoginPage = (props: Props) => {
                     background: theme.palette.primary.main,
                     padding: '0.3rem',
                     borderRadius: '5px',
-                  }}
-                >
+                  }}>
                   your data
                 </strong>
               </Typography>
@@ -169,8 +163,7 @@ const LoginPage = (props: Props) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-          }}
-        >
+          }}>
           {images.map((image, i) => (
             <img
               key={i}
@@ -207,8 +200,7 @@ const LoginPage = (props: Props) => {
             <Button
               type="submit"
               variant="contained"
-              sx={{ background: theme.palette.primary.main }}
-            >
+              sx={{ background: theme.palette.primary.main }}>
               <Typography sx={{ color: theme.palette.primary.light }}>
                 Log In
               </Typography>
