@@ -21,7 +21,7 @@ const LoginPage = (props: Props) => {
   const userEmail = 'test@invyo.io';
   const userPassword = 'test123@';
   const navigate = useNavigate();
-  const interval = 2000;
+  const interval = 2500;
 
   const images: Image[] = [
     {
@@ -83,22 +83,25 @@ const LoginPage = (props: Props) => {
         height: '100vh',
       }}
     >
-      <AppBar sx={{ background: theme.palette.primary.main }}>
-        <Grid
-          container
-          direction="row"
-          alignItems="center"
-          justifyContent={'space-between'}
-          padding={'1rem'}
-        >
-          <Grid>
-            <Typography>{'invyo'.toUpperCase()}</Typography>
+      <Grid container display={{ md: 'none' }}>
+        <AppBar sx={{ background: theme.palette.primary.main }}>
+          <Grid
+            container
+            direction="row"
+            alignItems="center"
+            justifyContent={'space-between'}
+            padding={'1rem'}
+          >
+            <Grid>
+              <Typography>{'invyo'.toUpperCase()}</Typography>
+            </Grid>
+            <Grid>
+              <Typography>Log in</Typography>
+            </Grid>
           </Grid>
-          <Grid>
-            <Typography>Log in</Typography>
-          </Grid>
-        </Grid>
-      </AppBar>
+        </AppBar>
+      </Grid>
+
       <Grid
         color="primary"
         width={'100%'}
