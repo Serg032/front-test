@@ -58,6 +58,10 @@
 .form-text {
     display: none;
 }
+.form-container {
+    display: flex;
+    flex-direction: column;
+}
 @media screen and (min-height: 800px) {
     .login-first-section-container {
         height: 500px;
@@ -107,5 +111,8 @@
     }
     .login-leading-text {
         color: var(--color-secondary);
+    }
+    .login-text-field{
+        width: 30rem;
     }
 }

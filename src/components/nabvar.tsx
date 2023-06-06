@@ -1,4 +1,5 @@
 import * as React from 'react';
+import './../styles/navbar.css';
 import Drawer from '@mui/material/Drawer';
 import {
   AppBar,
@@ -20,8 +21,9 @@ interface DrawerList {
   icon: React.ReactNode;
 }
 
-function NavBar() {
-  const navigate = useNavigate();
+function NavBar() {               
+const navigate = useNavigate();
+  const urlParams = useLocation();
   const [state, setState] = React.useState(false);
   const toggleDrawer = () => setState(!state);
   React.useEffect(() => {
@@ -37,7 +39,6 @@ function NavBar() {
         <DataSaverOffIcon
           sx={{
             color: theme.palette.primary.light,
-            fontSize: { xs: '30px', sm: '50px' },
           }}
         />
       ),
@@ -48,7 +49,6 @@ function NavBar() {
         <AssignmentIcon
           sx={{
             color: theme.palette.primary.light,
-            fontSize: { xs: '30px', sm: '50px' },
           }}
         />
       ),
@@ -59,13 +59,11 @@ function NavBar() {
         <LogoutIcon
           sx={{
             color: theme.palette.primary.light,
-            fontSize: { xs: '30px', sm: '50px' },
           }}
         />
       ),
     },
   ];
-  const urlParams = useLocation();
 
   const buildTitle = (): string => {
     let title: string = '';
@@ -82,74 +80,41 @@ function NavBar() {
 
   return (
     <AppBar color="primary" sx={{ background: theme.palette.primary.main }}>
-      <Grid
-        container
-        direction={'row'}
-        justifyContent={'space-between'}
-        padding={'1rem'}
-        alignItems={'center'}>
+      <div className="appbar-container">
         <IconButton onClick={() => toggleDrawer()}>
           <MenuIcon
             color="primary"
             sx={{
               color: theme.palette.primary.light,
-              fontSize: { xs: '25px', sm: '50px' },
             }}
           />
         </IconButton>
-        <Typography>{buildTitle()}</Typography>
-      </Grid>
+        <Typography sx={{ paddingRight: '1rem' }}>{buildTitle()}</Typography>
+      </div>
       <Drawer open={state} onClose={() => toggleDrawer()}>
-        <Typography
-          padding={'1rem'}
-          display={'flex'}
-          alignItems={'center'}
-          width={'100%'}
-          sx={{
-            background: theme.palette.primary.main,
-            color: theme.palette.primary.light,
-          }}>
-          <Box component={'span'} sx={{ typography: { xs: 'h6', sm: 'h4' } }}>
-            INVYO
-          </Box>
-        </Typography>
-        <Grid
-          container
-          color="secondary"
-          sx={{ background: theme.palette.primary.main }}
-          display={'flex'}
-          direction={'column'}
-          height={'100vh'}>
-          {list.map((item) => (
-            <Button
-              key={item.path}
-              sx={{ width: '100%' }}
-              onClick={item.path === 'Log Out' ? () => logout() : undefined}>
-              <Grid
-                container
-                display={'flex'}
-                direction={'row'}
-                alignItems={'center'}
-                mt={{ sm: '2rem' }}
-                gap={{ xs: '2rem', sm: '3rem' }}
-                justifyContent={'center'}
-                padding={'1rem'}
-                width={'100%'}>
-                {item.icon}
-                <Typography
-                  style={{ padding: '1rem' }}
-                  color={'primary'}
-                  sx={{ color: theme.palette.primary.light }}>
-                  <Box
-                    component={'span'}
-                    sx={{ typography: { xs: 'h6', sm: 'h4' } }}>
-                    {item.path}
-                  </Box>
-                </Typography>
-              </Grid>
-            </Button>
-          ))}
-        </Grid>
+        <div className="drawer-container">
+          <Typography className="navbar-title">
+            <Box component={'span'}>INVYO</Box>
+          </Typography>
+          <div className="drawer-buttons-container">
+            {list.map((item) => (
+              <Button
+                key={item.path}
+                onClick={item.path === 'Log Out' ? () => logout() : undefined}>
+                <div className="drawer-button">
+                  {item.icon}
+                  <Typography
+                    style={{ padding: '1rem' }}
+                    color={'primary'}
+                    variant="inherit"
+                    sx={{ color: theme.palette.primary.light }}>
+                    <Box component={'span'}>{item.path}</Box>
+                  </Typography>
+                </div>
+              </Button>
+            ))}
+          </div>
+        </div>
       </Drawer>
     </AppBar>
   );

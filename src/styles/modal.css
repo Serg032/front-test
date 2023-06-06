@@ -1,0 +1,9 @@
+@import url('./app.css');
+
+.modal-container {
+    background-color: var(--color-primary);
+}
+
+.add-task-typo {
+    font-family: var(--font-family);
+}

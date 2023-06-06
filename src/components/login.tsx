@@ -47,6 +47,7 @@ const LoginPage = (props: Props) => {
   const [currentIndex, setCurrentIndex] = React.useState(0);
 
   React.useEffect(() => {
+    localStorage.getItem('auth') ? navigate('/todo') : undefined;
     const timer = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
     }, interval);
@@ -116,7 +117,7 @@ const LoginPage = (props: Props) => {
               </div>
             </div>
             <div>
-              <Typography className='login-leading-text' textAlign={'center'}>
+              <Typography className="login-leading-text" textAlign={'center'}>
                 INVYO is a leading provider of technological solutions,
                 specialized in data processing and analysis.
               </Typography>
@@ -138,32 +139,32 @@ const LoginPage = (props: Props) => {
           </div>
         </div>
         <div className="login-form-container">
-          <Typography className='form-text'>
+          <Typography className="form-text">
             If you have an account you can access to INVYO utilies.
           </Typography>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="form-container">
             <TextField
+              className="login-text-field"
               label="Email"
               type="email"
               value={email}
               onChange={handleEmailChange}
               required
-              fullWidth
               margin="normal"
             />
             <TextField
+              className="login-text-field"
               label="Contraseña"
               type="password"
               value={password}
               onChange={handlePasswordChange}
               required
-              fullWidth
               margin="normal"
             />
             <Button
               type="submit"
               variant="contained"
-              sx={{ background: theme.palette.primary.main }}>
+              sx={{ background: theme.palette.primary.main, width: '7rem' }}>
               <Typography>Log In</Typography>
             </Button>
           </form>
