@@ -6,7 +6,13 @@ import Button from '@mui/material/Button';
 import theme from '../styles/theme';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
-import { IconButton, Typography } from '@mui/material';
+import { IconButton, SelectChangeEvent, Typography } from '@mui/material';
+import AddTaskForm from './add-task-form';
+import { Status, Task } from './my-tasks';
+
+interface LStorage {
+  items: Task[];
+}
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -19,8 +25,16 @@ const style = {
   boxShadow: 24,
 };
 
-function ChildModal() {
+export default function AddTaskModal() {
   const [open, setOpen] = React.useState(false);
+  const [task, setTask] = React.useState<Task>({
+    id: '',
+    title: '',
+    description: '',
+    deadline: '',
+    status: 'In Progress',
+  });
+  const tasksKey = 'tasks';
   const handleOpen = () => {
     setOpen(true);
   };
@@ -28,33 +42,32 @@ function ChildModal() {
     setOpen(false);
   };
 
-  return (
-    <React.Fragment>
-      <Button onClick={handleOpen}>Open Child Modal</Button>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="child-modal-title"
-        aria-describedby="child-modal-description">
-        <Box sx={{ xs: { ...style } }}> 
-          <h2 id="child-modal-title">Text in a child modal</h2>
-          <p id="child-modal-description">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-          </p>
-          <Button onClick={handleClose}>Close Child Modal</Button>
-        </Box>
-      </Modal>
-    </React.Fragment>
-  );
-}
-
-export default function NestedModal() {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => {
-    setOpen(true);
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTask((prevState) => ({ ...prevState, title: event.target.value }));
   };
-  const handleClose = () => {
-    setOpen(false);
+  const handleDescriptionChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setTask((prevState) => ({ ...prevState, description: event.target.value }));
+  };
+  const handleDeadlineChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTask((prevState) => ({ ...prevState, deadline: event.target.value }));
+  };
+  const handleStatusChange = (event: SelectChangeEvent) => {
+    setTask((prevState) => ({
+      ...prevState,
+      status: event.target.value as Status,
+    }));
+  };
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const result: LStorage = localStorage.getItem(tasksKey)
+      ? (JSON.parse(localStorage.getItem(tasksKey)!) as LStorage)
+      : {
+          items: [],
+        };
+    localStorage.setItem(tasksKey, JSON.stringify(result.items.concat(task)));
+    console.log('localStorage', JSON.parse(localStorage.getItem(tasksKey)!));
   };
 
   return (
@@ -73,12 +86,49 @@ export default function NestedModal() {
             <CloseIcon />
           </IconButton>
           <h2 id="parent-modal-title">Add new task</h2>
-          <p id="parent-modal-description">
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </p>
+          <AddTaskForm
+            title={task.title}
+            description={task.description}
+            deadline={task.deadline}
+            status={task.status}
+            titleChange={handleTitleChange}
+            descriptionChange={handleDescriptionChange}
+            deadlineChange={handleDeadlineChange}
+            statusChange={handleStatusChange}
+            onSubmit={handleSubmit}
+          />
           <ChildModal />
         </Box>
       </Modal>
     </div>
+  );
+}
+
+function ChildModal() {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <React.Fragment>
+      <Button onClick={handleOpen}>Open Child Modal</Button>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="child-modal-title"
+        aria-describedby="child-modal-description">
+        <Box sx={{ xs: { ...style } }}>
+          <h2 id="child-modal-title">Text in a child modal</h2>
+          <p id="child-modal-description">
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+          </p>
+          <Button onClick={handleClose}>Close Child Modal</Button>
+        </Box>
+      </Modal>
+    </React.Fragment>
   );
 }

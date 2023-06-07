@@ -1,12 +1,12 @@
 import React from 'react';
 import '../styles/my-tasks.css';
 import NavBar from './nabvar';
-import NestedModal from './add-task-modal';
 import { Typography } from '@mui/material';
+import AddTaskModal from './add-task-modal';
 
-type Status = 'In Progress' | 'Complete';
+export type Status = 'In Progress' | 'Complete';
 
-interface Task {
+export interface Task {
   id: string;
   title: string;
   description: string;
@@ -25,7 +25,7 @@ const MyTasks = () => {
     <main className="tasks-main-container">
       <NavBar />
       <div className="tasks-add-section">
-        <NestedModal />
+        <AddTaskModal />
       </div>
       <div className="test">
         {tasks.length === 0 ? (
