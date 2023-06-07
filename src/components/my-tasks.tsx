@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/my-tasks.css';
 import NavBar from './nabvar';
-import { Typography } from '@mui/material';
+import { Button, Grid, Typography } from '@mui/material';
 import AddTaskModal, { LStorage, tasksKey } from './add-task-modal';
 import TaskCard from './task-card.tsx';
 
@@ -24,6 +24,7 @@ const MyTasks = () => {
     deadline: '',
     status: 'In Progress',
   });
+  const [deleteConfirmStatus, setDeleteConfirmStatus] = React.useState(false);
   React.useEffect(() => {
     localStorage.getItem('tasks') === null
       ? setTasks({ items: [] })
@@ -60,6 +61,20 @@ const MyTasks = () => {
     console.log('from ls', loadStorage());
     window.location.reload();
   };
+  const handleDeleteStatus = (): void => {
+    setDeleteConfirmStatus(true);
+  };
+
+  const confirmDeleteFunction = (id: string) => {
+    const tasks: LStorage = JSON.parse(
+      localStorage.getItem(tasksKey) as string,
+    );
+    const taskUpdated = tasks.items.filter((task) => task.id !== id);
+    localStorage.setItem(
+      tasksKey,
+      JSON.stringify({ items: [...taskUpdated] } as LStorage),
+    );
+  };
 
   return (
     <main className="tasks-main-container">
@@ -79,13 +94,21 @@ const MyTasks = () => {
           <Typography>You have no tasks</Typography>
         ) : (
           tasks.items.map((t) => (
-            <TaskCard
-              key={t.id}
-              title={t.title}
-              description={t.description}
-              deadline={t.deadline}
-              status={t.status}
-            />
+            <div key={t.id}>
+              <TaskCard
+                key={t.id}
+                id={t.id}
+                title={t.title}
+                description={t.description}
+                deadline={t.deadline}
+                status={t.status}
+                confirmDelete={confirmDeleteFunction}
+                deleteConfirmationStatus={handleDeleteStatus}
+                task={t}
+                deleteConfirmStatus={deleteConfirmStatus}
+                setDeleteConfirmStatus={() => setDeleteConfirmStatus(false)}
+              />
+            </div>
           ))
         )}
       </div>

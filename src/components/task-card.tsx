@@ -1,16 +1,21 @@
-import React from 'react';
+import React, { MouseEventHandler } from 'react';
 import '../styles/task-card.css';
-import { Button, Card, LinearProgress, Typography } from '@mui/material';
+import { Button, Card, Grid, LinearProgress, Typography } from '@mui/material';
 import Box from '@mui/joy/Box';
 import Chip from '@mui/joy/Chip';
-import { Status } from './my-tasks.tsx';
+import { Status, Task } from './my-tasks.tsx';
 
 interface TaskCardData {
+  id: string;
   title: string;
   description: string;
   deadline: string;
   status: Status;
-  onDelete: () => void;
+  confirmDelete: (id: string) => void;
+  deleteConfirmationStatus: () => void;
+  deleteConfirmStatus: unknown;
+  setDeleteConfirmStatus: () => void;
+  task: Task;
 }
 
 const TaskCard = (props: TaskCardData) => {
@@ -29,34 +34,64 @@ const TaskCard = (props: TaskCardData) => {
     const normalizedProgress = Math.min(Math.max(progressValue, 0), 100);
     setProgress(normalizedProgress);
   }, []);
-  // @ts-ignore
+
   return (
-    <Card className="task-card-container">
-      <div className={'card-first-section'}>
-        <Typography variant={'subtitle1'}>
-          {props.title.toUpperCase()}
+    <>
+      <Card className="task-card-container">
+        <div className={'card-first-section'}>
+          <Typography variant={'subtitle1'}>
+            {props.title.toUpperCase()}
+          </Typography>
+          <Box>
+            <Chip
+              color={props.status === 'In Progress' ? 'primary' : 'success'}>
+              {props.status.toUpperCase()}
+            </Chip>
+          </Box>
+        </div>
+        <Typography variant={'subtitle2'}>{props.description}</Typography>
+        <Typography variant={'subtitle2'}>
+          Deadline: {props.deadline}
         </Typography>
-        <Box>
-          <Chip color={props.status === 'In Progress' ? 'primary' : 'success'}>
-            {props.status.toUpperCase()}
-          </Chip>
-        </Box>
+        <LinearProgress
+          color={'primary'}
+          variant={'determinate'}
+          value={progress}
+        />
+        <Button
+          onClick={props.deleteConfirmationStatus}
+          variant={'outlined'}
+          color={'error'}
+          sx={{ width: '5rem' }}>
+          <Typography variant={'subtitle2'}>Delete</Typography>
+        </Button>
+      </Card>
+      <div
+        className="delete-confirmation-container"
+        style={{
+          display: props.deleteConfirmStatus === false ? 'none' : 'block',
+        }}>
+        <div className="main-confirmation-container">
+          <Typography variant="subtitle2">
+            Do you want to delete the task {props.task.title}
+          </Typography>
+          <div className="confirmation-container">
+            <Button
+              onClick={() => props.confirmDelete(props.task.id)}
+              variant="contained"
+              color="error">
+              Yes
+            </Button>
+            <Button
+              onClick={() => props.setDeleteConfirmStatus}
+              variant="outlined"
+              color="primary">
+              No
+            </Button>
+          </div>
+        </div>
       </div>
-      <Typography variant={'subtitle2'}>{props.description}</Typography>
-      <Typography variant={'subtitle2'}>Deadline: {props.deadline}</Typography>
-      <LinearProgress
-        color={'primary'}
-        variant={'determinate'}
-        value={progress}
-      />
-      <Button
-        onClick={props.onDelete}
-        variant={'outlined'}
-        color={'error'}
-        sx={{ width: '5rem' }}>
-        <Typography variant={'subtitle2'}>Delete</Typography>
-      </Button>
-    </Card>
+    </>
   );
 };
 
