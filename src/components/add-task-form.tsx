@@ -55,7 +55,7 @@ const AddTaskForm = (props: Props) => {
       />
       <Box sx={{ minWidth: 120 }}>
         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Age</InputLabel>
+          <InputLabel id="demo-simple-select-label">Status</InputLabel>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"

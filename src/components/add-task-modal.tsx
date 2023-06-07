@@ -11,7 +11,7 @@ import AddTaskForm from './add-task-form';
 import { Status, Task } from './my-tasks';
 
 interface LStorage {
-  items: Task[];
+  items: Task[] | [];
 }
 
 const style = {
@@ -61,13 +61,24 @@ export default function AddTaskModal() {
   };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const result: LStorage = localStorage.getItem(tasksKey)
-      ? (JSON.parse(localStorage.getItem(tasksKey)!) as LStorage)
-      : {
-          items: [],
-        };
-    localStorage.setItem(tasksKey, JSON.stringify(result.items.concat(task)));
-    console.log('localStorage', JSON.parse(localStorage.getItem(tasksKey)!));
+    const loadStorage = (): LStorage => {
+      if (localStorage.getItem(tasksKey) === null) {
+        return { items: [] };
+      } else {
+        return JSON.parse(localStorage.getItem(tasksKey) as string) as LStorage;
+      }
+    };
+    // const charged = loaded.items.push({ ...task } as Task);
+    localStorage.setItem(
+      tasksKey,
+      JSON.stringify({
+        items: [
+          ...loadStorage().items,
+          { ...task, id: Math.floor(Math.random() * 10000) },
+        ],
+      }),
+    );
+    console.log('from ls', loadStorage());
   };
 
   return (
