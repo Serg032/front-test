@@ -9,6 +9,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { IconButton, SelectChangeEvent, Typography } from '@mui/material';
 import AddTaskForm from './add-task-form';
 import { Status, Task } from './my-tasks';
+import { FormEvent } from 'react';
 
 interface LStorage {
   items: Task[] | [];
@@ -27,6 +28,7 @@ const style = {
 
 export default function AddTaskModal() {
   const [open, setOpen] = React.useState(false);
+  const [openChild, setOpenChild] = React.useState(false);
   const [task, setTask] = React.useState<Task>({
     id: '',
     title: '',
@@ -59,6 +61,9 @@ export default function AddTaskModal() {
       status: event.target.value as Status,
     }));
   };
+  const openChildModal = (event: FormEvent<HTMLFormElement>) => {
+    setOpenChild(true);
+  };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const loadStorage = (): LStorage => {
@@ -68,7 +73,6 @@ export default function AddTaskModal() {
         return JSON.parse(localStorage.getItem(tasksKey) as string) as LStorage;
       }
     };
-    // const charged = loaded.items.push({ ...task } as Task);
     localStorage.setItem(
       tasksKey,
       JSON.stringify({
@@ -96,7 +100,6 @@ export default function AddTaskModal() {
           <IconButton onClick={handleClose}>
             <CloseIcon />
           </IconButton>
-          <h2 id="parent-modal-title">Add new task</h2>
           <AddTaskForm
             title={task.title}
             description={task.description}
@@ -106,13 +109,19 @@ export default function AddTaskModal() {
             descriptionChange={handleDescriptionChange}
             deadlineChange={handleDeadlineChange}
             statusChange={handleStatusChange}
-            onSubmit={handleSubmit}
+            onSubmit={openChildModal}
+            onClose={handleClose}
           />
           <ChildModal />
         </Box>
       </Modal>
     </div>
   );
+}
+
+interface ChildrenProps {
+  onClose: (event: React.MouseEvent<HTMLDivElement>) => void;
+  onOpen: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 function ChildModal() {

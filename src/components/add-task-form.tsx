@@ -1,4 +1,5 @@
 import React from 'react';
+import '../styles/add-task-form.css';
 import {
   Box,
   Button,
@@ -11,6 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Status } from './my-tasks';
+import theme from '../styles/theme.ts';
 
 type Event = React.ChangeEvent<HTMLInputElement>;
 
@@ -20,6 +22,7 @@ interface Props {
   descriptionChange: (event: Event) => void;
   deadlineChange: (event: Event) => void;
   statusChange: (event: SelectChangeEvent) => void;
+  onClose: (event: React.MouseEvent<HTMLDivElement>) => void;
   title: string;
   description: string;
   deadline: string;
@@ -38,15 +41,19 @@ const AddTaskForm = (props: Props) => {
         margin="normal"
       />
       <TextField
-        className="login-text-field"
+        className="add-task-login-text-field"
         label="description"
+        multiline={true}
+        rows={4}
+        placeholder={'Write here'}
         type="text"
         value={props.description}
         onChange={props.descriptionChange}
         margin="normal"
       />
       <TextField
-        className="login-text-field"
+        InputLabelProps={{ shrink: true }}
+        className="add-task-login-text-field"
         label="deadline"
         type="date"
         value={props.deadline}
@@ -54,7 +61,7 @@ const AddTaskForm = (props: Props) => {
         margin="normal"
       />
       <Box sx={{ minWidth: 120 }}>
-        <FormControl fullWidth>
+        <FormControl>
           <InputLabel id="demo-simple-select-label">Status</InputLabel>
           <Select
             labelId="demo-simple-select-label"
@@ -67,13 +74,18 @@ const AddTaskForm = (props: Props) => {
           </Select>
         </FormControl>
       </Box>
-      <div className="add-task-buttons-container">
-        <Button type="submit" variant="contained">
+      <div className="add-task-form-container">
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{ backgroundColor: theme.palette.primary.main }}>
           <Typography>Create Task</Typography>
         </Button>
-        <Button variant="outlined">
-          <Typography>Cancel</Typography>
-        </Button>
+        <div onClick={props.onClose}>
+          <Button type={'button'} variant="outlined" color={'error'}>
+            <Typography color={'error'}>Cancel</Typography>
+          </Button>
+        </div>
       </div>
     </form>
   );

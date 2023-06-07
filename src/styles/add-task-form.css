@@ -1,0 +1,11 @@
+.add-task-form-container {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+.add-task-login-text-field {
+    width: 80%;
+}
