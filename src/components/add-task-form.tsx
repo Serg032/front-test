@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FormEvent } from 'react';
 import '../styles/add-task-form.css';
 import {
   Box,
@@ -17,7 +17,7 @@ import theme from '../styles/theme.ts';
 type Event = React.ChangeEvent<HTMLInputElement>;
 
 interface Props {
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  onSubmit: (event: React.FormEvent<Element>) => void;
   titleChange: (event: Event) => void;
   descriptionChange: (event: Event) => void;
   deadlineChange: (event: Event) => void;
@@ -33,6 +33,7 @@ const AddTaskForm = (props: Props) => {
   return (
     <form onSubmit={props.onSubmit} className="add-task-form-container">
       <TextField
+        required={true}
         className="add-task-login-text-field"
         label="title"
         type="text"
@@ -52,6 +53,7 @@ const AddTaskForm = (props: Props) => {
         margin="normal"
       />
       <TextField
+        required={true}
         InputLabelProps={{ shrink: true }}
         className="add-task-login-text-field"
         label="deadline"
@@ -76,7 +78,7 @@ const AddTaskForm = (props: Props) => {
       </Box>
       <div className="add-task-form-container">
         <Button
-          type="submit"
+          type={'submit'}
           variant="contained"
           sx={{ backgroundColor: theme.palette.primary.main }}>
           <Typography>Create Task</Typography>

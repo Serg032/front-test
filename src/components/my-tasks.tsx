@@ -2,7 +2,8 @@ import React from 'react';
 import '../styles/my-tasks.css';
 import NavBar from './nabvar';
 import { Typography } from '@mui/material';
-import AddTaskModal from './add-task-modal';
+import AddTaskModal, { LStorage, tasksKey } from './add-task-modal';
+import TaskCard from './task-card.tsx';
 
 export type Status = 'In Progress' | 'Complete';
 
@@ -15,23 +16,77 @@ export interface Task {
 }
 
 const MyTasks = () => {
-  const [newTask, setNewTask] = React.useState({});
-  const tasks: Task[] = [];
-  const addTask = (task: Task) => {
-    setNewTask(task);
+  const [tasks, setTasks] = React.useState<LStorage>({ items: [] });
+  const [task, setTask] = React.useState<Task>({
+    id: '',
+    title: '',
+    description: '',
+    deadline: '',
+    status: 'In Progress',
+  });
+  React.useEffect(() => {
+    localStorage.getItem('tasks') === null
+      ? setTasks({ items: [] })
+      : setTasks(
+          JSON.parse(localStorage.getItem('tasks') as string) as LStorage,
+        );
+  }, []);
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const loadStorage = (): LStorage => {
+      if (localStorage.getItem(tasksKey) === null) {
+        return { items: [] };
+      } else {
+        return JSON.parse(localStorage.getItem(tasksKey) as string) as LStorage;
+      }
+    };
+    localStorage.setItem(
+      tasksKey,
+      JSON.stringify({
+        items: [
+          ...loadStorage().items,
+          { ...task, id: Math.floor(Math.random() * 10000) },
+        ],
+      }),
+    );
+    setTask({
+      title: '',
+      description: '',
+      deadline: '',
+      status: 'In Progress',
+      id: '',
+    });
+    console.log('from ls', loadStorage());
+    window.location.reload();
   };
 
   return (
     <main className="tasks-main-container">
       <NavBar />
       <div className="tasks-add-section">
-        <AddTaskModal />
+        <AddTaskModal
+          onSubmit={handleSubmit}
+          setTaskState={setTask}
+          title={task.title}
+          description={task.description}
+          deadline={task.deadline}
+          status={task.status}
+        />
       </div>
-      <div className="test">
-        {tasks.length === 0 ? (
+      <div className="cards-container">
+        {tasks.items.length === 0 ? (
           <Typography>You have no tasks</Typography>
         ) : (
-          <Typography>Tasks</Typography>
+          tasks.items.map((t) => (
+            <TaskCard
+              key={t.id}
+              title={t.title}
+              description={t.description}
+              deadline={t.deadline}
+              status={t.status}
+            />
+          ))
         )}
       </div>
     </main>

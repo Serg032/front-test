@@ -9,9 +9,17 @@ import AddIcon from '@mui/icons-material/Add';
 import { IconButton, SelectChangeEvent, Typography } from '@mui/material';
 import AddTaskForm from './add-task-form';
 import { Status, Task } from './my-tasks';
-import { FormEvent } from 'react';
 
-interface LStorage {
+interface Props {
+  onSubmit: (event: React.FormEvent<Element>) => void;
+  setTaskState: React.Dispatch<React.SetStateAction<Task>>;
+  title: string;
+  description: string;
+  deadline: string;
+  status: Status;
+}
+
+export interface LStorage {
   items: Task[] | [];
 }
 
@@ -26,63 +34,41 @@ const style = {
   boxShadow: 24,
 };
 
-export default function AddTaskModal() {
+export const tasksKey = 'tasks';
+
+export default function AddTaskModal(props: Props) {
   const [open, setOpen] = React.useState(false);
-  const [openChild, setOpenChild] = React.useState(false);
-  const [task, setTask] = React.useState<Task>({
-    id: '',
-    title: '',
-    description: '',
-    deadline: '',
-    status: 'In Progress',
-  });
-  const tasksKey = 'tasks';
   const handleOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
-
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTask((prevState) => ({ ...prevState, title: event.target.value }));
+    props.setTaskState((prevState) => ({
+      ...prevState,
+      title: event.target.value,
+    }));
   };
   const handleDescriptionChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    setTask((prevState) => ({ ...prevState, description: event.target.value }));
+    props.setTaskState((prevState) => ({
+      ...prevState,
+      description: event.target.value,
+    }));
   };
   const handleDeadlineChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTask((prevState) => ({ ...prevState, deadline: event.target.value }));
+    props.setTaskState((prevState) => ({
+      ...prevState,
+      deadline: event.target.value,
+    }));
   };
   const handleStatusChange = (event: SelectChangeEvent) => {
-    setTask((prevState) => ({
+    props.setTaskState((prevState) => ({
       ...prevState,
       status: event.target.value as Status,
     }));
-  };
-  const openChildModal = (event: FormEvent<HTMLFormElement>) => {
-    setOpenChild(true);
-  };
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const loadStorage = (): LStorage => {
-      if (localStorage.getItem(tasksKey) === null) {
-        return { items: [] };
-      } else {
-        return JSON.parse(localStorage.getItem(tasksKey) as string) as LStorage;
-      }
-    };
-    localStorage.setItem(
-      tasksKey,
-      JSON.stringify({
-        items: [
-          ...loadStorage().items,
-          { ...task, id: Math.floor(Math.random() * 10000) },
-        ],
-      }),
-    );
-    console.log('from ls', loadStorage());
   };
 
   return (
@@ -101,54 +87,66 @@ export default function AddTaskModal() {
             <CloseIcon />
           </IconButton>
           <AddTaskForm
-            title={task.title}
-            description={task.description}
-            deadline={task.deadline}
-            status={task.status}
+            title={props.title}
+            description={props.description}
+            deadline={props.deadline}
+            status={props.status}
             titleChange={handleTitleChange}
             descriptionChange={handleDescriptionChange}
             deadlineChange={handleDeadlineChange}
             statusChange={handleStatusChange}
-            onSubmit={openChildModal}
+            onSubmit={props.onSubmit}
             onClose={handleClose}
           />
-          <ChildModal />
         </Box>
       </Modal>
     </div>
   );
 }
-
-interface ChildrenProps {
-  onClose: (event: React.MouseEvent<HTMLDivElement>) => void;
-  onOpen: (event: React.MouseEvent<HTMLDivElement>) => void;
+// const handleSubmit = (event: React.FormEvent) => {
+{
+  /*  event.preventDefault();*/
 }
-
-function ChildModal() {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <React.Fragment>
-      <Button onClick={handleOpen}>Open Child Modal</Button>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="child-modal-title"
-        aria-describedby="child-modal-description">
-        <Box sx={{ xs: { ...style } }}>
-          <h2 id="child-modal-title">Text in a child modal</h2>
-          <p id="child-modal-description">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-          </p>
-          <Button onClick={handleClose}>Close Child Modal</Button>
-        </Box>
-      </Modal>
-    </React.Fragment>
-  );
+{
+  /*  const loadStorage = (): LStorage => {*/
 }
+{
+  /*    if (localStorage.getItem(tasksKey) === null) {*/
+}
+{
+  /*      return { items: [] };*/
+}
+{
+  /*    } else {*/
+}
+{
+  /*      return JSON.parse(localStorage.getItem(tasksKey) as string) as LStorage;*/
+}
+{
+  /*    }*/
+}
+//   };
+//   localStorage.setItem(
+//     tasksKey,
+//     JSON.stringify({
+//       items: [
+//         ...loadStorage().items,
+//         { ...task, id: Math.floor(Math.random() * 10000) },
+{
+  /*      ],*/
+}
+{
+  /*    }),*/
+}
+{
+  /*  );*/
+}
+//   setTask({
+//     title: '',
+//     description: '',
+//     deadline: '',
+//     status: 'In Progress',
+//     id: '',
+//   });
+//   console.log('from ls', loadStorage());
+// };

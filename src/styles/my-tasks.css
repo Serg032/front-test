@@ -9,8 +9,16 @@
 
 .tasks-add-section {
     padding-top: 4rem;
+
 }
 
-.test {
-    background-color: red   ;
+.cards-container {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+.card-first-section {
+    display: flex;
+    justify-content: space-between;
 }
