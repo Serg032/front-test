@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/my-tasks.css';
 import NavBar from './nabvar';
-import { Button, Grid, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import AddTaskModal, { LStorage, tasksKey } from './add-task-modal';
 import TaskCard from './task-card.tsx';
 
@@ -24,14 +24,14 @@ const MyTasks = () => {
     deadline: '',
     status: 'In Progress',
   });
-  const [deleteConfirmStatus, setDeleteConfirmStatus] = React.useState(false);
+  const [showCompletedTasks, setShowCompletedTasks] = React.useState(false);
   React.useEffect(() => {
     localStorage.getItem('tasks') === null
       ? setTasks({ items: [] })
       : setTasks(
           JSON.parse(localStorage.getItem('tasks') as string) as LStorage,
         );
-  }, []);
+  }, [showCompletedTasks]);
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -61,10 +61,6 @@ const MyTasks = () => {
     console.log('from ls', loadStorage());
     window.location.reload();
   };
-  const handleDeleteStatus = (): void => {
-    setDeleteConfirmStatus(true);
-  };
-
   const confirmDeleteFunction = (id: string) => {
     const tasks: LStorage = JSON.parse(
       localStorage.getItem(tasksKey) as string,
@@ -74,12 +70,38 @@ const MyTasks = () => {
       tasksKey,
       JSON.stringify({ items: [...taskUpdated] } as LStorage),
     );
+    window.location.reload();
+  };
+  const updateTask = (id: string) => {
+    const tasks: LStorage = JSON.parse(
+      localStorage.getItem(tasksKey) as string,
+    );
+    const foundTask = tasks.items.find((y) => y.id === id);
+    const updatedTask: Task = {
+      ...foundTask,
+      status: foundTask?.status === 'Complete' ? 'In Progress' : 'Complete',
+    } as Task;
+    const tasksFiltered = tasks.items.filter((t) => t.id !== foundTask?.id);
+    console.log(tasksFiltered);
+    const tasksUpdated: Task[] = [...tasksFiltered, updatedTask];
+    localStorage.setItem(
+      tasksKey,
+      JSON.stringify({ items: tasksUpdated } as LStorage),
+    );
+    console.log(tasksUpdated);
+    window.location.reload();
+  };
+  const showCTasks = () => {
+    setShowCompletedTasks(!showCompletedTasks);
   };
 
   return (
     <main className="tasks-main-container">
       <NavBar />
       <div className="tasks-add-section">
+        <Button onClick={() => showCTasks()}>
+          <Typography>{'show completed tasks'.toUpperCase()}</Typography>
+        </Button>
         <AddTaskModal
           onSubmit={handleSubmit}
           setTaskState={setTask}
@@ -92,24 +114,42 @@ const MyTasks = () => {
       <div className="cards-container">
         {tasks.items.length === 0 ? (
           <Typography>You have no tasks</Typography>
+        ) : showCompletedTasks ? (
+          tasks.items
+            .filter((tsk) => tsk.status === 'Complete' || 'In Progress')
+            .map((t) => (
+              <div key={t.id}>
+                <TaskCard
+                  key={t.id}
+                  id={t.id}
+                  title={t.title}
+                  description={t.description}
+                  deadline={t.deadline}
+                  status={t.status}
+                  confirmDelete={confirmDeleteFunction}
+                  task={t}
+                  update={updateTask}
+                />
+              </div>
+            ))
         ) : (
-          tasks.items.map((t) => (
-            <div key={t.id}>
-              <TaskCard
-                key={t.id}
-                id={t.id}
-                title={t.title}
-                description={t.description}
-                deadline={t.deadline}
-                status={t.status}
-                confirmDelete={confirmDeleteFunction}
-                deleteConfirmationStatus={handleDeleteStatus}
-                task={t}
-                deleteConfirmStatus={deleteConfirmStatus}
-                setDeleteConfirmStatus={() => setDeleteConfirmStatus(false)}
-              />
-            </div>
-          ))
+          tasks.items
+            .filter((tas) => tas.status === 'In Progress')
+            .map((t) => (
+              <div key={t.id}>
+                <TaskCard
+                  key={t.id}
+                  id={t.id}
+                  title={t.title}
+                  description={t.description}
+                  deadline={t.deadline}
+                  status={t.status}
+                  confirmDelete={confirmDeleteFunction}
+                  task={t}
+                  update={updateTask}
+                />
+              </div>
+            ))
         )}
       </div>
     </main>

@@ -12,10 +12,8 @@ interface TaskCardData {
   deadline: string;
   status: Status;
   confirmDelete: (id: string) => void;
-  deleteConfirmationStatus: () => void;
-  deleteConfirmStatus: unknown;
-  setDeleteConfirmStatus: () => void;
   task: Task;
+  update: (id: string) => void;
 }
 
 const TaskCard = (props: TaskCardData) => {
@@ -36,62 +34,41 @@ const TaskCard = (props: TaskCardData) => {
   }, []);
 
   return (
-    <>
-      <Card className="task-card-container">
-        <div className={'card-first-section'}>
-          <Typography variant={'subtitle1'}>
-            {props.title.toUpperCase()}
-          </Typography>
-          <Box>
-            <Chip
-              color={props.status === 'In Progress' ? 'primary' : 'success'}>
-              {props.status.toUpperCase()}
-            </Chip>
-          </Box>
-        </div>
-        <Typography variant={'subtitle2'}>{props.description}</Typography>
-        <Typography variant={'subtitle2'}>
-          Deadline: {props.deadline}
+    <Card className="task-card-container">
+      <div className={'card-first-section'}>
+        <Typography variant={'subtitle1'}>
+          {props.title.toUpperCase()}
         </Typography>
-        <LinearProgress
-          color={'primary'}
-          variant={'determinate'}
-          value={progress}
-        />
+        <Box>
+          <Chip color={props.status === 'In Progress' ? 'primary' : 'success'}>
+            {props.status.toUpperCase()}
+          </Chip>
+        </Box>
+      </div>
+      <Typography variant={'subtitle2'}>{props.description}</Typography>
+      <Typography variant={'subtitle2'}>Deadline: {props.deadline}</Typography>
+      <LinearProgress
+        color={'primary'}
+        variant={'determinate'}
+        value={progress}
+      />
+      <div className="card-buttons-container">
         <Button
-          onClick={props.deleteConfirmationStatus}
+          onClick={() => props.confirmDelete(props.task.id)}
           variant={'outlined'}
           color={'error'}
           sx={{ width: '5rem' }}>
           <Typography variant={'subtitle2'}>Delete</Typography>
         </Button>
-      </Card>
-      <div
-        className="delete-confirmation-container"
-        style={{
-          display: props.deleteConfirmStatus === false ? 'none' : 'block',
-        }}>
-        <div className="main-confirmation-container">
-          <Typography variant="subtitle2">
-            Do you want to delete the task {props.task.title}
-          </Typography>
-          <div className="confirmation-container">
-            <Button
-              onClick={() => props.confirmDelete(props.task.id)}
-              variant="contained"
-              color="error">
-              Yes
-            </Button>
-            <Button
-              onClick={() => props.setDeleteConfirmStatus}
-              variant="outlined"
-              color="primary">
-              No
-            </Button>
-          </div>
-        </div>
+        <Button
+          onClick={() => props.update(props.task.id)}
+          variant={'outlined'}
+          color={'primary'}
+          sx={{ width: '5rem' }}>
+          <Typography variant={'subtitle2'}>Update</Typography>
+        </Button>
       </div>
-    </>
+    </Card>
   );
 };
 
