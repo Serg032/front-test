@@ -16,8 +16,8 @@ export interface Task {
 }
 
 const MyTasks = () => {
-  const [tasks, setTasks] = React.useState<LStorage>({ items: [] });
-  const [task, setTask] = React.useState<Task>({
+  const [tasks, setTasks] = React.useState<Task[]>([]);
+  const [newTask, setNewTask] = React.useState<Task>({
     id: '',
     title: '',
     description: '',
@@ -26,71 +26,39 @@ const MyTasks = () => {
   });
   const [showCompletedTasks, setShowCompletedTasks] = React.useState(false);
   React.useEffect(() => {
-    localStorage.getItem('tasks') === null
-      ? setTasks({ items: [] })
-      : setTasks(
-          JSON.parse(localStorage.getItem('tasks') as string) as LStorage,
-        );
-  }, [showCompletedTasks]);
-  const handleSubmit = (event: React.FormEvent) => {
+    const storedTasks = localStorage.getItem('tasks') as string;
+    if (storedTasks) {
+      setTasks(JSON.parse(storedTasks) as Task[]);
+    }
+  }, []);
+  React.useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks]);
+  const handleAddTask = (event: React.FormEvent) => {
     event.preventDefault();
+    if (newTask.title !== '') {
+      setTasks([
+        ...tasks,
+        { ...newTask, id: Math.floor(Math.random() * 10000).toString() },
+      ]);
+      setNewTask({
+        id: '',
+        description: '',
+        deadline: '',
+        status: 'In Progress',
+        title: '',
+      });
+    } else {
+      alert('Title needed');
+    }
+  };
+  const handleDeleteTask = (id: string) => {
+    const updatedTodos = tasks.filter((taskToDelete) => taskToDelete.id !== id);
+    console.log(updatedTodos);
+    setTasks(updatedTodos);
+  };
+  const updateTask = (id: string) => {};
 
-    const loadStorage = (): LStorage => {
-      if (localStorage.getItem(tasksKey) === null) {
-        return { items: [] };
-      } else {
-        return JSON.parse(localStorage.getItem(tasksKey) as string) as LStorage;
-      }
-    };
-    localStorage.setItem(
-      tasksKey,
-      JSON.stringify({
-        items: [
-          ...loadStorage().items,
-          { ...task, id: Math.floor(Math.random() * 10000) },
-        ],
-      }),
-    );
-    setTask({
-      title: '',
-      description: '',
-      deadline: '',
-      status: 'In Progress',
-      id: '',
-    });
-    console.log('from ls', loadStorage());
-    window.location.reload();
-  };
-  const confirmDeleteFunction = (id: string) => {
-    const tasks: LStorage = JSON.parse(
-      localStorage.getItem(tasksKey) as string,
-    );
-    const taskUpdated = tasks.items.filter((task) => task.id !== id);
-    localStorage.setItem(
-      tasksKey,
-      JSON.stringify({ items: [...taskUpdated] } as LStorage),
-    );
-    window.location.reload();
-  };
-  const updateTask = (id: string) => {
-    const tasks: LStorage = JSON.parse(
-      localStorage.getItem(tasksKey) as string,
-    );
-    const foundTask = tasks.items.find((y) => y.id === id);
-    const updatedTask: Task = {
-      ...foundTask,
-      status: foundTask?.status === 'Complete' ? 'In Progress' : 'Complete',
-    } as Task;
-    const tasksFiltered = tasks.items.filter((t) => t.id !== foundTask?.id);
-    console.log(tasksFiltered);
-    const tasksUpdated: Task[] = [...tasksFiltered, updatedTask];
-    localStorage.setItem(
-      tasksKey,
-      JSON.stringify({ items: tasksUpdated } as LStorage),
-    );
-    console.log(tasksUpdated);
-    window.location.reload();
-  };
   const showCTasks = () => {
     setShowCompletedTasks(!showCompletedTasks);
   };
@@ -103,19 +71,19 @@ const MyTasks = () => {
           <Typography>{'show completed tasks'.toUpperCase()}</Typography>
         </Button>
         <AddTaskModal
-          onSubmit={handleSubmit}
-          setTaskState={setTask}
-          title={task.title}
-          description={task.description}
-          deadline={task.deadline}
-          status={task.status}
+          onSubmit={handleAddTask}
+          setTaskState={setNewTask}
+          title={newTask.title}
+          description={newTask.description}
+          deadline={newTask.deadline}
+          status={newTask.status}
         />
       </div>
       <div className="cards-container">
-        {tasks.items.length === 0 ? (
+        {tasks.length === 0 ? (
           <Typography>You have no tasks</Typography>
         ) : showCompletedTasks ? (
-          tasks.items
+          tasks
             .filter((tsk) => tsk.status === 'Complete' || 'In Progress')
             .map((t) => (
               <div key={t.id}>
@@ -126,14 +94,14 @@ const MyTasks = () => {
                   description={t.description}
                   deadline={t.deadline}
                   status={t.status}
-                  confirmDelete={confirmDeleteFunction}
+                  confirmDelete={handleDeleteTask}
                   task={t}
                   update={updateTask}
                 />
               </div>
             ))
         ) : (
-          tasks.items
+          tasks
             .filter((tas) => tas.status === 'In Progress')
             .map((t) => (
               <div key={t.id}>
@@ -144,7 +112,7 @@ const MyTasks = () => {
                   description={t.description}
                   deadline={t.deadline}
                   status={t.status}
-                  confirmDelete={confirmDeleteFunction}
+                  confirmDelete={handleDeleteTask}
                   task={t}
                   update={updateTask}
                 />
