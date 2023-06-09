@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom';
 import LoginPage from './components/login';
 import MyTasks from './components/my-tasks'
+import MyData from './components/data'
 import maddyness from './assets/maddyness.jpeg'
 import bfm from './assets/bfm.jpeg'
 import echos from './assets/echos.jpeg'
@@ -17,7 +18,8 @@ const router = createBrowserRouter([
     echosImg={echos}
     techImg={tech}
     pilars={threePilars}/>},
-  {path: 'todo', element: <MyTasks/>}
+  {path: '/todo', element: <MyTasks/>},
+  {path: '/data', element: <MyData/>}
 ])
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

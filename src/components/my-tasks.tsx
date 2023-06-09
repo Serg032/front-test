@@ -24,23 +24,23 @@ const MyTasks = () => {
     deadline: '',
     status: 'In Progress',
   });
+  const [updatedTasks, setUpdatedTasks] = React.useState(false);
   const [showCompletedTasks, setShowCompletedTasks] = React.useState(false);
   React.useEffect(() => {
-    const storedTasks = localStorage.getItem('tasks') as string;
-    if (storedTasks) {
-      setTasks(JSON.parse(storedTasks) as Task[]);
-    }
-  }, []);
-  React.useEffect(() => {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-  }, [tasks]);
+    localStorage.getItem('tasks') !== null
+      ? setTasks(JSON.parse(localStorage.getItem('tasks') as string))
+      : undefined;
+    setUpdatedTasks(false);
+  }, [updatedTasks]);
+
   const handleAddTask = (event: React.FormEvent) => {
     event.preventDefault();
     if (newTask.title !== '') {
-      setTasks([
+      const updatedTasks = [
         ...tasks,
         { ...newTask, id: Math.floor(Math.random() * 10000).toString() },
-      ]);
+      ];
+      localStorage.setItem('tasks', JSON.stringify(updatedTasks));
       setNewTask({
         id: '',
         description: '',
@@ -51,13 +51,44 @@ const MyTasks = () => {
     } else {
       alert('Title needed');
     }
+    setUpdatedTasks(true);
   };
+
   const handleDeleteTask = (id: string) => {
-    const updatedTodos = tasks.filter((taskToDelete) => taskToDelete.id !== id);
-    console.log(updatedTodos);
-    setTasks(updatedTodos);
+    const getStorage = JSON.parse(
+      localStorage.getItem('tasks') as string,
+    ) as Task[];
+    const storageUpdated = getStorage.filter((t) => t.id !== id);
+    localStorage.setItem('tasks', JSON.stringify(storageUpdated as Task[]));
+    setUpdatedTasks(true);
   };
-  const updateTask = (id: string) => {};
+
+  const updateTask = (id: string) => {
+    const getStorage: Task[] = JSON.parse(
+      localStorage.getItem('tasks') as string,
+    );
+    const taskToUpdate = tasks.find((t) => t.id === id) as Task;
+    const storageFiltered = tasks.filter((t) => t.id !== id);
+    const storageUpdated: Task[] = [
+      ...storageFiltered,
+      {
+        ...taskToUpdate,
+        status: taskToUpdate.status === 'Complete' ? 'In Progress' : 'Complete',
+      },
+    ];
+    localStorage.setItem(
+      'tasks',
+      JSON.stringify([
+        ...storageFiltered,
+        {
+          ...taskToUpdate,
+          status:
+            taskToUpdate.status === 'Complete' ? 'In Progress' : 'Complete',
+        },
+      ] as Task[]),
+    );
+    setUpdatedTasks(true);
+  };
 
   const showCTasks = () => {
     setShowCompletedTasks(!showCompletedTasks);

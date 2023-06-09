@@ -21,8 +21,8 @@ interface DrawerList {
   icon: React.ReactNode;
 }
 
-function NavBar() {               
-const navigate = useNavigate();
+function NavBar() {
+  const navigate = useNavigate();
   const urlParams = useLocation();
   const [state, setState] = React.useState(false);
   const toggleDrawer = () => setState(!state);
@@ -78,6 +78,18 @@ const navigate = useNavigate();
     navigate('/login');
   };
 
+  const buildHandleClick = (path: string) => {
+    path === 'Log Out' ? logout() : undefined;
+    if (path === 'Log Out') {
+      localStorage.removeItem('auth');
+      return navigate('/login');
+    } else if (path === 'My Tasks') {
+      return navigate('/todo');
+    } else {
+      return navigate('/data');
+    }
+  };
+
   return (
     <AppBar color="primary" sx={{ background: theme.palette.primary.main }}>
       <div className="appbar-container">
@@ -100,7 +112,7 @@ const navigate = useNavigate();
             {list.map((item) => (
               <Button
                 key={item.path}
-                onClick={item.path === 'Log Out' ? () => logout() : undefined}>
+                onClick={() => buildHandleClick(item.path)}>
                 <div className="drawer-button">
                   {item.icon}
                   <Typography
