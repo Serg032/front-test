@@ -24,11 +24,24 @@ import data from '../data/data';
 
 const MyData = () => {
   const [dataStorage, setDataStorage] = React.useState(data.articles);
-  const [search, setSearch] = React.useState('');
+  const [active, setActive] = React.useState(false);
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const [showMore, setShowMore] = React.useState(5);
 
   React.useEffect(() => {
-    console.log('effect');
-  }, [search]);
+    if (searchTerm === '') {
+      setDataStorage(data.articles.slice(0, showMore));
+      setActive(false);
+    } else {
+      const dataFiltered = dataStorage.filter((article) =>
+        article.Title.toLocaleLowerCase().includes(
+          searchTerm.toLocaleLowerCase(),
+        ),
+      );
+      setDataStorage(dataFiltered);
+      setActive(false);
+    }
+  }, [active, showMore]);
 
   const topics = new Set(
     data.articles.flatMap((article) => article.Tags.topic),
@@ -37,22 +50,42 @@ const MyData = () => {
   topics.forEach((t) => tl.push(t));
   const topicList = tl.sort();
   const [topic, setTopic] = React.useState(topicList[0]);
+
+  const handleOnChangeSearch = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
   const handleOnSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSearch(search);
+    setActive(true);
   };
 
   const handleOnTopicChange = (event: SelectChangeEvent) => {
     setTopic(event.target.value);
   };
 
+  const handleShowMore = (event: unknown) => {
+    setShowMore(showMore + 5);
+  };
+
+  const handleReset = (event: unknown) => {
+    setShowMore(5);
+    setSearchTerm('');
+    setActive(true);
+  };
+
   return (
     <main className="data-container">
       <NavBar />
       <div className="first-section-data-container">
-        <Paper className="search-options-container" sx={{ padding: '1rem' }}>
+        <Paper className="search-options-container">
           <form className="data-form" onSubmit={handleOnSubmit}>
-            <TextField fullWidth placeholder="Search by title or content" />
+            <TextField
+              fullWidth
+              value={searchTerm}
+              placeholder="Search by title or content"
+              type="text"
+              onChange={handleOnChangeSearch}
+            />
             <Button
               type="submit"
               variant="contained"
@@ -60,78 +93,89 @@ const MyData = () => {
               Search
             </Button>
           </form>
-          <Box>
-            <FormControl>
-              <InputLabel id="demo-simple-select-label">Topic</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={topic}
-                label={'all'}
-                onChange={handleOnTopicChange}>
-                {tl.map((topic) => (
-                  <MenuItem key={topic} value={topic}>
-                    {topic.charAt(0).toUpperCase() + topic.slice(1)}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
+          <div className="last-search-container">
+            <Box>
+              <FormControl>
+                <InputLabel id="demo-simple-select-label">Topic</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={topic}
+                  label={'all'}
+                  onChange={handleOnTopicChange}>
+                  {tl.map((topic) => (
+                    <MenuItem key={topic} value={topic}>
+                      {topic.charAt(0).toUpperCase() + topic.slice(1)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+            <Button onClick={handleReset} variant="outlined" color="error">
+              Reset
+            </Button>
+          </div>
         </Paper>
-      </div>
-      <TableContainer component={Paper}>
-        <Table
-          sx={{
-            minWidth: 650,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1rem',
-          }}
-          size="small"
-          aria-label="a dense table">
-          <TableHead>
-            <TableRow sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <TableCell sx={{ width: '20%', textAlign: 'center' }}>
-                Title
-              </TableCell>
-              <TableCell sx={{ width: '40%', textAlign: 'center' }}>
-                Content
-              </TableCell>
-              <TableCell sx={{ width: '20%', textAlign: 'center' }}>
-                Language
-              </TableCell>
-              <TableCell sx={{ width: '20%', textAlign: 'center' }}>
-                Tags
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {dataStorage.map((article) => (
+        <TableContainer component={Paper}>
+          <Table
+            sx={{
+              minWidth: 650,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem',
+            }}
+            size="small"
+            aria-label="a dense table">
+            <TableHead>
               <TableRow
-                key={`${article.Title}-${article.Date}-${article.url}`}
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  maxHeight: '300px',
-                  paddingBottom: '1rem',
-                }}>
+                sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <TableCell sx={{ width: '20%', textAlign: 'center' }}>
-                  {article.Title}
+                  Title
                 </TableCell>
-                <TableCell sx={{ width: '40%', overflow: 'scroll' }}>
-                  {article.Content}
+                <TableCell sx={{ width: '40%', textAlign: 'center' }}>
+                  Content
                 </TableCell>
                 <TableCell sx={{ width: '20%', textAlign: 'center' }}>
-                  {article.Language}
+                  Language
                 </TableCell>
                 <TableCell sx={{ width: '20%', textAlign: 'center' }}>
-                  {article.Tags.topic}
+                  Tags
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {dataStorage.map((article) => (
+                <TableRow
+                  key={`${Math.floor(Math.random() * 1000000000)}`}
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    maxHeight: '300px',
+                    paddingBottom: '1rem',
+                  }}>
+                  <TableCell sx={{ width: '20%', textAlign: 'center' }}>
+                    {article.Title}
+                  </TableCell>
+                  <TableCell sx={{ width: '40%', overflow: 'scroll' }}>
+                    {article.Content}
+                  </TableCell>
+                  <TableCell sx={{ width: '20%', textAlign: 'center' }}>
+                    {article.Language}
+                  </TableCell>
+                  <TableCell sx={{ width: '20%', textAlign: 'center' }}>
+                    {article.Tags.topic}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <div>
+          <Button onClick={handleShowMore} variant="outlined">
+            Show more
+          </Button>
+        </div>
+      </div>
     </main>
   );
 };
