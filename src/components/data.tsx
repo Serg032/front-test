@@ -18,6 +18,7 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Typography,
 } from '@mui/material';
 import theme from '../styles/theme';
 import data from '../data/data';
@@ -58,15 +59,12 @@ const MyData = () => {
     event.preventDefault();
     setActive(true);
   };
-
   const handleOnTopicChange = (event: SelectChangeEvent) => {
     setTopic(event.target.value);
   };
-
   const handleShowMore = (event: unknown) => {
     setShowMore(showMore + 5);
   };
-
   const handleReset = (event: unknown) => {
     setShowMore(5);
     setSearchTerm('');
@@ -94,23 +92,6 @@ const MyData = () => {
             </Button>
           </form>
           <div className="last-search-container">
-            <Box>
-              <FormControl>
-                <InputLabel id="demo-simple-select-label">Topic</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={topic}
-                  label={'all'}
-                  onChange={handleOnTopicChange}>
-                  {tl.map((topic) => (
-                    <MenuItem key={topic} value={topic}>
-                      {topic.charAt(0).toUpperCase() + topic.slice(1)}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
             <Button onClick={handleReset} variant="outlined" color="error">
               Reset
             </Button>
@@ -154,16 +135,24 @@ const MyData = () => {
                     paddingBottom: '1rem',
                   }}>
                   <TableCell sx={{ width: '20%', textAlign: 'center' }}>
-                    {article.Title}
+                    <Typography>{article.Title}</Typography>
                   </TableCell>
                   <TableCell sx={{ width: '40%', overflow: 'scroll' }}>
-                    {article.Content}
+                    <Typography>{article.Content}</Typography>
                   </TableCell>
                   <TableCell sx={{ width: '20%', textAlign: 'center' }}>
-                    {article.Language}
+                    <Typography>{article.Language}</Typography>
                   </TableCell>
-                  <TableCell sx={{ width: '20%', textAlign: 'center' }}>
-                    {article.Tags.topic}
+                  <TableCell
+                    sx={{
+                      width: '20%',
+                      textAlign: 'center',
+                      display: 'flex',
+                      flexDirection: 'column',
+                    }}>
+                    {article.Tags.topic.map((t) => (
+                      <Typography key={t}>{t}</Typography>
+                    ))}
                   </TableCell>
                 </TableRow>
               ))}
