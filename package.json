@@ -1,5 +1,6 @@
 {
   "name": "invyo-app",
+  "homepage": "https://serg032.github.io/front-test/", 
   "version": "0.1.0",
   "private": true,
   "dependencies": {
